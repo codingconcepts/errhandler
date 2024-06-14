@@ -16,7 +16,7 @@ mux := http.NewServeMux()
 mux.Handle("GET /products", errhandler.Wrap(addProduct))
 ```
 
-Update your existing handler signature, by adding an `error` return type and utilizing the optional `errhandler.ParseJSON` and `errhandler.SendJSON` helper functions to reduce the amount of boilerplate code handlers require:
+Update your existing handler signatures, by adding an `error` return type and utilizing the optional `errhandler.ParseJSON` and `errhandler.SendJSON` helper functions to reduce the amount of boilerplate code handlers require:
 
 ```go
 func addProduct(w http.ResponseWriter, r *http.Request) error {
