@@ -5,13 +5,13 @@ import (
 	"net/http"
 )
 
-// ErrHandlerFunc wraps http.HandlerFunc, allowing for errors to be handled
-// in a more familiar way inside your handlers.
-type ErrHandlerFunc func(w http.ResponseWriter, r *http.Request) error
+// Wrap an http.HandlerFunc, allowing for errors to be handled in a more
+// familiar way inside your handlers.
+type Wrap func(w http.ResponseWriter, r *http.Request) error
 
 // ServeHTTP is invoked when the HTTP handler is called, capturing and returning
 // any errors encountered in the ErrHandlerFunc.
-func (fn ErrHandlerFunc) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (fn Wrap) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if err := fn(w, r); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
