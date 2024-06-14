@@ -24,9 +24,9 @@ func addProduct(w http.ResponseWriter, r *http.Request) error {
   if err := errhandler.ParseJSON(r, &p); err != nil {
     return fmt.Errorf("parsing request json: %w", err)
   }
-
+  
   products[p.ID] = p
-
+  
   return errhandler.SendJSON(w, p)
 }
 ```
