@@ -37,6 +37,16 @@ func SendString(w http.ResponseWriter, message string) error {
 	return nil
 }
 
+// SendError returns an error response to the caller, or fails with an error.
+func SendError(w http.ResponseWriter, code int, err error) error {
+	w.Header().Set("Content-Type", "text/plain")
+	w.WriteHeader(code)
+	if _, err := w.Write([]byte(err.Error())); err != nil {
+		return err
+	}
+	return nil
+}
+
 // ParseJSON can be used to parse a string from the body of a request.
 func ParseJSON(r *http.Request, val any) error {
 	return json.NewDecoder(r.Body).Decode(val)
