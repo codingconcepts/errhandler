@@ -22,7 +22,10 @@ Update your existing handler signatures, by adding an `error` return type and ut
 func addProduct(w http.ResponseWriter, r *http.Request) error {
   var p product
   if err := errhandler.ParseJSON(r, &p); err != nil {
-    return SendError(w, http.StatusUnprocessableEntity, err)
+    return err
+
+    // Or, if you'd prefer to customise the status code:
+    // errhandler.Error(http.StatusUnprocessableEntity, err)
   }
   
   products[p.ID] = p

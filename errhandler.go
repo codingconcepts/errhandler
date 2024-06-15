@@ -13,7 +13,11 @@ type Wrap func(w http.ResponseWriter, r *http.Request) error
 // any errors encountered in the ErrHandlerFunc.
 func (fn Wrap) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if err := fn(w, r); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		if cerr, ok := err.(HTTPError); ok {
+			http.Error(w, cerr.Error(), cerr.status)
+		} else {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
 	}
 }
 
@@ -32,16 +36,6 @@ func SendString(w http.ResponseWriter, message string) error {
 	w.Header().Set("Content-Type", "text/plain")
 	w.WriteHeader(http.StatusOK)
 	if _, err := w.Write([]byte(message)); err != nil {
-		return err
-	}
-	return nil
-}
-
-// SendError returns an error response to the caller, or fails with an error.
-func SendError(w http.ResponseWriter, code int, err error) error {
-	w.Header().Set("Content-Type", "text/plain")
-	w.WriteHeader(code)
-	if _, err := w.Write([]byte(err.Error())); err != nil {
 		return err
 	}
 	return nil

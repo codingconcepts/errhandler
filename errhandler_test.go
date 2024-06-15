@@ -60,10 +60,10 @@ func TestWrap_ServeHTTP(t *testing.T) {
 		{
 			name: "send error",
 			handler: Wrap(func(w http.ResponseWriter, r *http.Request) error {
-				return SendError(w, http.StatusUnprocessableEntity, fmt.Errorf("error doing stuff: %w", errors.New("database error")))
+				return Error(http.StatusUnprocessableEntity, fmt.Errorf("error doing stuff: %w", errors.New("database error")))
 			}),
 			expectedStatus: http.StatusUnprocessableEntity,
-			expectedBody:   "error doing stuff: database error",
+			expectedBody:   "error doing stuff: database error\n",
 		},
 		{
 			name: "error",
