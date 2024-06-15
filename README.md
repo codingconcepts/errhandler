@@ -25,7 +25,7 @@ func addProduct(w http.ResponseWriter, r *http.Request) error {
     return err
 
     // Or, if you'd prefer to customise the status code:
-    // errhandler.Error(http.StatusUnprocessableEntity, err)
+    // return errhandler.Error(http.StatusUnprocessableEntity, err)
   }
   
   products[p.ID] = p
