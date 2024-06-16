@@ -13,7 +13,7 @@ Wrap Go's stdlib `http.HandlerFunc` using `errhandler.Wrap()`:
 
 ```go
 mux := http.NewServeMux()
-mux.Handle("GET /products", errhandler.Wrap(addProduct))
+mux.Handle("POST /products", errhandler.Wrap(addProduct))
 ```
 
 Update your existing handler signatures, by adding an `error` return type and utilizing the optional `errhandler.ParseJSON` and `errhandler.SendJSON` helper functions to reduce the amount of boilerplate code handlers require:
