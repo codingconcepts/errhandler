@@ -64,7 +64,7 @@ func addProduct(w http.ResponseWriter, r *http.Request) error {
 chain := errhandler.Chain(midLog1, midLog2)
 
 mux := http.NewServeMux()
-mux.Handle("GET /products", errhandler.Wrap(chain(getProducts)))
+mux.Handle("GET /products/{id}", errhandler.Wrap(chain(getProducts)))
 
 func midLog1(n errhandler.Wrap) errhandler.Wrap {
 	return func(w http.ResponseWriter, r *http.Request) error {
@@ -78,5 +78,9 @@ func midLog2(n errhandler.Wrap) errhandler.Wrap {
 		log.Printf("2 %s %s", r.Method, r.URL.Path)
 		return n(w, r)
 	}
+}
+
+func addProduct(w http.ResponseWriter, r *http.Request) error {
+  ...
 }
 ```
