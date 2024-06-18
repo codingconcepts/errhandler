@@ -33,3 +33,50 @@ func addProduct(w http.ResponseWriter, r *http.Request) error {
   return errhandler.SendJSON(w, p)
 }
 ```
+
+### Middleware
+
+errhandler contains helper objects for building middleware
+
+* A `errhandler.Middleware` type, which is simply a function that takes a Wrap function and returns a Wrap function:
+
+```go
+mux := http.NewServeMux()
+mux.Handle("GET /products/{id}", errhandler.Wrap(midLog(getProduct)))
+
+...
+
+func midLog(n errhandler.Wrap) errhandler.Wrap {
+	return func(w http.ResponseWriter, r *http.Request) error {
+		log.Printf("1 %s %s", r.Method, r.URL.Path)
+		return n(w, r)
+	}
+}
+
+func addProduct(w http.ResponseWriter, r *http.Request) error {
+  ...
+}
+```
+
+* A `errhandler.Chain` function, which allows `Middleware` functions easy to chain:
+
+```go
+chain := errhandler.Chain(midLog1, midLog2)
+
+mux := http.NewServeMux()
+mux.Handle("GET /products", errhandler.Wrap(chain(getProducts)))
+
+func midLog1(n errhandler.Wrap) errhandler.Wrap {
+	return func(w http.ResponseWriter, r *http.Request) error {
+		log.Printf("1 %s %s", r.Method, r.URL.Path)
+		return n(w, r)
+	}
+}
+
+func midLog2(n errhandler.Wrap) errhandler.Wrap {
+	return func(w http.ResponseWriter, r *http.Request) error {
+		log.Printf("2 %s %s", r.Method, r.URL.Path)
+		return n(w, r)
+	}
+}
+```
